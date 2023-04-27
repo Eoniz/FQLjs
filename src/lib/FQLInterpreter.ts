@@ -11,9 +11,9 @@ export class FQLInterpreter {
   constructor() {
   }
 
-  public execute(ast: FQLAbstractSyntaxTree, arrayOfObj: Array<Record<string, unknown>>) {
+  public execute<T>(ast: FQLAbstractSyntaxTree, arrayOfObj: Array<T>): Array<T> {
     try {
-      const results: Array<Record<string, unknown>> = [];
+      const results: Array<T> = [];
       for (const obj of arrayOfObj) {
         const result = this.executeStatements(ast, ast.structuredNodes, obj);
 
@@ -28,7 +28,7 @@ export class FQLInterpreter {
     }
   }
 
-  private executeStatements(ast: FQLAbstractSyntaxTree, nodes: Array<FQLNode<FQLNodeType>>, obj: Record<string, unknown>) {
+  private executeStatements<T>(ast: FQLAbstractSyntaxTree, nodes: Array<FQLNode<FQLNodeType>>, obj: T) {
     const results: Array<FQLData<any>> = [];
 
     for (let i = 0; i < nodes.length; i++) {
@@ -45,7 +45,7 @@ export class FQLInterpreter {
     return results.every((_value) => !!_value.value);
   }
 
-  private evaluateStatement(ast: FQLAbstractSyntaxTree, node: FQLNode<FQLNodeType> | null, obj: Record<string, unknown>): FQLData<any> {
+  private evaluateStatement<T>(ast: FQLAbstractSyntaxTree, node: FQLNode<FQLNodeType> | null, obj: T): FQLData<any> {
     if (!node) {
       return {
         type: FQLDataType.VOID,
@@ -119,8 +119,6 @@ export class FQLInterpreter {
           return result.filter((r: any) => r !== undefined).flat();
         }
 
-        // @ts-ignore-next-line
-        console.log(JSON.stringify(identifierNode.getIdentifier(), null, 4));
         const results = getValues(obj ?? {}, identifierNode.getIdentifier().name);
 
         if (results.length === 1) {

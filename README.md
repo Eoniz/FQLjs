@@ -5,6 +5,8 @@ Simple query language for filtering data
 ## Examples
 
 ````typescript
+import { fql } from "fqljs";
+
 const array = [
   {
     id: 1,
@@ -28,17 +30,10 @@ const array = [
   },
 ];
 
-const lexer = new FQLLexer();
-const parser = new FQLParser();
-const interpreter = new FQLInterpreter();
-
-
 // FIRST EXAMPLE
 
 const firstQuery = `id % 2 = 0`;
-const tokens = lexer.parse(firstQuery);
-const nodes = parser.parser(tokens);
-const results = interpreter.execute(nodes, array);
+const results = fql(array, firstQuery);
 //     ^
 // [{ id: 2, foo: 'foo' }, { id: 4, foo: 'barfoo' }]
 
@@ -46,9 +41,7 @@ const results = interpreter.execute(nodes, array);
 // SECOND EXAMPLE
 
 const secondQuery = `foo = "bar"`;
-const tokens = lexer.parse(secondQuery);
-const nodes = parser.parser(tokens);
-const results = interpreter.execute(nodes, array);
+const results = fql(array, secondQuery);
 //     ^
 // [{ id: 5, foo: 'bar' }]
 
@@ -56,9 +49,7 @@ const results = interpreter.execute(nodes, array);
 // THIRD EXAMPLE
 
 const thirdQuery = `id <= 2`;
-const tokens = lexer.parse(thirdQuery);
-const nodes = parser.parser(tokens);
-const results = interpreter.execute(nodes, array);
+const results = fql(array, thirdQuery);
 //     ^
 // [{ id: 1, foo: 'bar' }, { id: 2, foo: 'foo' }]
 
